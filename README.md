@@ -75,3 +75,163 @@ Identifies latent topics by interpreting singular vectors as topics. Each docume
 ## Conclusion
 
 SVD is a versatile tool in NLP for uncovering latent semantics, reducing dimensionality, and improving computational efficiency. While newer deep learning methods have surpassed it in some areas, SVD remains relevant for its simplicity and effectiveness in foundational tasks.
+
+
+
+
+## Working
+
+The singular value decomposition (SVD) of a matrix is a factorization that expresses any \( m \times n \) matrix \( A \) as
+\[
+A = U \Sigma V^T,
+\]
+where:
+
+- **\( U \)** is an \( m \times m \) orthogonal matrix (its columns are orthonormal vectors),
+- **\( \Sigma \)** is an \( m \times n \) diagonal matrix with nonnegative entries (the singular values) on the diagonal, and
+- **\( V \)** is an \( n \times n \) orthogonal matrix.
+
+Below is a step-by-step procedure to compute the SVD of a matrix \( A \):
+
+---
+
+### **Step 1. Compute \( A^T A \)**
+- Form the matrix \( A^T A \). This is an \( n \times n \) symmetric and positive semi-definite matrix.
+- Because \( A^T A \) is symmetric, it has a full set of real eigenvalues and orthonormal eigenvectors.
+
+---
+
+### **Step 2. Find the Eigenvalues and Eigenvectors of \( A^T A \)**
+- **Eigenvalues:** Solve the characteristic equation
+  \[
+  \det(A^T A - \lambda I) = 0.
+  \]
+  Let the eigenvalues be \(\lambda_1, \lambda_2, \dots, \lambda_n\). These will be nonnegative (i.e., \(\lambda_i \ge 0\)).
+
+- **Singular Values:** Define the singular values \(\sigma_i\) of \( A \) as the nonnegative square roots of these eigenvalues:
+  \[
+  \sigma_i = \sqrt{\lambda_i}.
+  \]
+  It is common practice to order them in descending order:
+  \[
+  \sigma_1 \ge \sigma_2 \ge \cdots \ge \sigma_r \ge 0,
+  \]
+  where \( r \) is the rank of \( A \).
+
+- **Eigenvectors:** Let \( v_1, v_2, \dots, v_n \) be the corresponding unit-norm eigenvectors of \( A^T A \). These will form the columns of the matrix \( V \).
+
+---
+
+### **Step 3. Form the Matrix \( V \)**
+- Assemble the eigenvectors \( v_i \) into the orthogonal matrix \( V \):
+  \[
+  V = \begin{bmatrix} v_1 & v_2 & \cdots & v_n \end{bmatrix}.
+  \]
+- Since the eigenvectors are orthonormal, \( V \) satisfies \( V^T V = I_n \).
+
+---
+
+### **Step 4. Compute the Columns of \( U \)**
+For each nonzero singular value \(\sigma_i\) (i.e., for \( i \) such that \(\sigma_i > 0\)):
+
+1. **Calculate:** 
+   \[
+   u_i = \frac{1}{\sigma_i} A v_i.
+   \]
+   This gives a unit vector in \( \mathbb{R}^m \).
+
+2. **Assemble:** These vectors \( u_i \) will be the first \( r \) columns of the matrix \( U \).
+
+- **Handling Zero Singular Values:** If \( A \) has zero singular values (i.e., if \( r < m \)), then you need to choose additional orthonormal vectors \( u_{r+1}, \dots, u_m \) to complete the basis for \( \mathbb{R}^m \). These additional vectors can be chosen arbitrarily, as long as they are orthogonal to the computed \( u_i \) and to each other.
+
+---
+
+### **Step 5. Form the Matrix \( \Sigma \)**
+- Construct the \( m \times n \) diagonal matrix \( \Sigma \) whose diagonal entries are the singular values:
+  \[
+  \Sigma = \begin{bmatrix}
+  \sigma_1 & 0 & \cdots & 0 \\
+  0 & \sigma_2 & \cdots & 0 \\
+  \vdots & \vdots & \ddots & \vdots \\
+  0 & 0 & \cdots & \sigma_p \\
+  \end{bmatrix},
+  \]
+  where \( p = \min(m, n) \). The singular values beyond the rank of \( A \) (if any) will be zero.
+
+---
+
+### **Step 6. Write the Final SVD**
+- You now have:
+  \[
+  A = U \Sigma V^T.
+  \]
+- Verify that:
+  - \( U \) is orthogonal (\( U^T U = I_m \)),
+  - \( V \) is orthogonal (\( V^T V = I_n \)), and
+  - \( \Sigma \) is diagonal (with possibly additional zero rows or columns, as needed).
+
+---
+
+### **Alternative Approach**
+Another common method is to compute the eigen-decomposition of \( AA^T \) instead:
+- Find the eigenvalues and eigenvectors of \( AA^T \) to get \( U \).
+- Then, use the relation \( v_i = \frac{1}{\sigma_i} A^T u_i \) to compute \( V \).
+  
+Both approaches will yield the same singular values.
+
+---
+
+### **Example**
+
+Suppose
+\[
+A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix}.
+\]
+
+1. **Compute \( A^T A \):**
+   \[
+   A^T A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix}^T \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix} = \begin{bmatrix} 10 & 6 \\ 6 & 10 \end{bmatrix}.
+   \]
+
+2. **Find Eigenvalues:**
+   \[
+   \det \left( \begin{bmatrix} 10-\lambda & 6 \\ 6 & 10-\lambda \end{bmatrix} \right) = (10-\lambda)^2 - 36 = 0.
+   \]
+   Solving:
+   \[
+   (10-\lambda)^2 = 36 \quad \Rightarrow \quad 10-\lambda = \pm 6,
+   \]
+   which gives:
+   \[
+   \lambda_1 = 4 \quad \text{and} \quad \lambda_2 = 16.
+   \]
+   Thus, the singular values are:
+   \[
+   \sigma_1 = \sqrt{16} = 4, \quad \sigma_2 = \sqrt{4} = 2.
+   \]
+
+3. **Find Eigenvectors:** (Omit the detailed calculation here, but suppose you find normalized eigenvectors \( v_1 \) and \( v_2 \).)
+
+4. **Compute \( U \):** For each \( i \),
+   \[
+   u_i = \frac{1}{\sigma_i} A v_i.
+   \]
+
+5. **Assemble \( U \), \( \Sigma \), and \( V \).**
+
+You can check that \( A = U \Sigma V^T \).
+
+---
+
+### **Summary**
+
+To find the SVD of a matrix \( A \):
+
+1. **Compute \( A^T A \) and find its eigenvalues \(\lambda_i\) and eigenvectors \(v_i\).**
+2. **The singular values are \(\sigma_i = \sqrt{\lambda_i}\) (arranged in descending order).**
+3. **Form \( V \) from the eigenvectors \( v_i \).**
+4. **For each nonzero \(\sigma_i\), compute \( u_i = \frac{1}{\sigma_i} A v_i \) to form the columns of \( U \).**
+5. **Complete \( U \) if necessary, and form the diagonal matrix \( \Sigma \) with the singular values.**
+6. **Write the decomposition as \( A = U \Sigma V^T \).**
+
+This is the standard method to compute the SVD of a matrix. For larger or more complex matrices, numerical algorithms (like the Golub–Kahan bidiagonalization) are used in practice.
