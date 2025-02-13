@@ -76,9 +76,6 @@ Identifies latent topics by interpreting singular vectors as topics. Each docume
 
 SVD is a versatile tool in NLP for uncovering latent semantics, reducing dimensionality, and improving computational efficiency. While newer deep learning methods have surpassed it in some areas, SVD remains relevant for its simplicity and effectiveness in foundational tasks.
 
-
-
-
 ## Working
 
 The singular value decomposition (SVD) of a matrix is a factorization that expresses any \( m \times n \) matrix \( A \) as
@@ -96,12 +93,14 @@ Below is a step-by-step procedure to compute the SVD of a matrix \( A \):
 ---
 
 ### **Step 1. Compute \( A^T A \)**
+
 - Form the matrix \( A^T A \). This is an \( n \times n \) symmetric and positive semi-definite matrix.
 - Because \( A^T A \) is symmetric, it has a full set of real eigenvalues and orthonormal eigenvectors.
 
 ---
 
 ### **Step 2. Find the Eigenvalues and Eigenvectors of \( A^T A \)**
+
 - **Eigenvalues:** Solve the characteristic equation
   \[
   \det(A^T A - \lambda I) = 0.
@@ -123,6 +122,7 @@ Below is a step-by-step procedure to compute the SVD of a matrix \( A \):
 ---
 
 ### **Step 3. Form the Matrix \( V \)**
+
 - Assemble the eigenvectors \( v_i \) into the orthogonal matrix \( V \):
   \[
   V = \begin{bmatrix} v_1 & v_2 & \cdots & v_n \end{bmatrix}.
@@ -132,9 +132,10 @@ Below is a step-by-step procedure to compute the SVD of a matrix \( A \):
 ---
 
 ### **Step 4. Compute the Columns of \( U \)**
+
 For each nonzero singular value \(\sigma_i\) (i.e., for \( i \) such that \(\sigma_i > 0\)):
 
-1. **Calculate:** 
+1. **Calculate:**
    \[
    u_i = \frac{1}{\sigma_i} A v_i.
    \]
@@ -147,6 +148,7 @@ For each nonzero singular value \(\sigma_i\) (i.e., for \( i \) such that \(\sig
 ---
 
 ### **Step 5. Form the Matrix \( \Sigma \)**
+
 - Construct the \( m \times n \) diagonal matrix \( \Sigma \) whose diagonal entries are the singular values:
   \[
   \Sigma = \begin{bmatrix}
@@ -161,6 +163,7 @@ For each nonzero singular value \(\sigma_i\) (i.e., for \( i \) such that \(\sig
 ---
 
 ### **Step 6. Write the Final SVD**
+
 - You now have:
   \[
   A = U \Sigma V^T.
@@ -173,7 +176,9 @@ For each nonzero singular value \(\sigma_i\) (i.e., for \( i \) such that \(\sig
 ---
 
 ### **Alternative Approach**
+
 Another common method is to compute the eigen-decomposition of \( AA^T \) instead:
+
 - Find the eigenvalues and eigenvectors of \( AA^T \) to get \( U \).
 - Then, use the relation \( v_i = \frac{1}{\sigma_i} A^T u_i \) to compute \( V \).
   
